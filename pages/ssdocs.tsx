@@ -3,6 +3,7 @@ import type { FC } from "react";
 import type { GetServerSideProps } from "next";
 import { getUser, adminDB } from "~/utils/firebase/serverApp";
 import Layout from "~/layout/Layout";
+import Link from "~/components/Link";
 //* depending on what data you're using, this would get different stuff. but just checking if you can get user, and get user's doc.
 
 interface ServerSideDocI {
@@ -11,8 +12,17 @@ interface ServerSideDocI {
 }
 
 const ServerSideDoc: FC<ServerSideDocI> = ({ user, votes }) => {
+  const hasVoted = votes && user && votes[user?.uid];
   return (
     <Layout>
+      {hasVoted ? (
+        <p>you've voted already</p>
+      ) : (
+        <p>
+          go to <Link href="/votes">votes</Link> and place your vote for it show
+          up here.
+        </p>
+      )}
       {user ? <div>user: {user.email}</div> : <div>no user</div>}
       {votes ? (
         <pre>{JSON.stringify(votes, null, 2)}</pre>

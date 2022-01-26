@@ -1,10 +1,5 @@
 import type { User } from "firebase/auth";
-import {
-  onAuthStateChanged,
-  onIdTokenChanged,
-  getAuth,
-  getIdToken,
-} from "firebase/auth";
+import { onIdTokenChanged, getAuth, getIdToken } from "firebase/auth";
 import { app } from "~/utils/firebase/clientApp";
 import { clientAuth } from "~/utils/firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";

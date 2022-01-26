@@ -1,50 +1,29 @@
-import * as React from "react";
+import { Typography, List, ListItem, ListItemButton } from "@mui/material";
 import type { NextPage } from "next";
-import { Button, Container, Typography, Box } from "@mui/material";
+import Layout from "~/layout/Layout";
 import Link from "~/components/Link";
-import ProTip from "~/components/ProTip";
-import Copyright from "~/components/Copyright";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { getAuth } from "firebase/auth";
-import { collection } from "firebase/firestore";
-import { app, db } from "~/utils/firebase/clientApp";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  // Destructure user, loading, and error out of the hook.
-  const [user, loading, error] = useAuthState(getAuth(app));
-  const [votes, votesLoading, votesError] = useCollection(
-    collection(db, "votes")
-  );
-  if (!votesLoading && votes) {
-    votes.docs.map((doc) => console.log(doc.data()));
-  }
-  // console.log the current user and loading status
-  console.log("Loading:", loading, "|", "Current user:", user);
+  const { push } = useRouter();
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          MUI v5 + Next.js with TypeScript example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <Button variant="outlined" component={Link} href="/votes">
-          Vote
-        </Button>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
+    <Layout>
+      <h2>Firebase, MUI NextJS starter</h2>
+      <List>
+        <ListItemButton onClick={() => push("/auth")}>
+          1. Sign Up or Sign In
+        </ListItemButton>
+        <ListItemButton onClick={() => push("/votes")}>
+          2. Cast your vote
+        </ListItemButton>
+        <ListItemButton onClick={() => push("/ssuser")}>
+          3. see if you're being authed on serverside
+        </ListItemButton>
+        <ListItemButton onClick={() => push("/ssdocs")}>
+          4. see if docs being loaded server side
+        </ListItemButton>
+      </List>
+    </Layout>
   );
 };
 
