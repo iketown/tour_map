@@ -1,19 +1,23 @@
-import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { createTheme } from "@mui/material/styles";
+import type { ThemeOptions } from "@mui/material/styles";
 
-// Create a theme instance.
-const theme = createTheme({
+// https://bareynol.github.io/mui-theme-creator/
+
+const themeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: '#556cd6',
+      main: "#607d8b",
     },
     secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
+      main: "#f57f17",
     },
   },
-});
+  typography: {
+    fontFamily: "Open Sans",
+  },
+};
+
+// Create a theme instance.
+const theme = createTheme(themeOptions);
 
 export default theme;
