@@ -1,8 +1,9 @@
 // auth.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import type { FC } from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-
+import type { User } from "firebase/auth";
+import { getIdToken } from "firebase/auth";
 import { clientAuth } from "~/utils/firebase/clientApp";
 import {
   GoogleAuthProvider,
@@ -12,11 +13,25 @@ import {
 import Layout from "~/layout/Layout";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
-
+import { useAuth } from "~/hooks/auth/useAuth";
+import { setCookie } from "nookies";
 // Configure FirebaseUI.
 
 const SignInScreen: FC = () => {
   const { push } = useRouter();
+  const [user, loading, error] = useAuth();
+  useEffect(() => {
+    if (user) {
+      console.log("user", user);
+      getIdToken(user).then((token) => {
+        setCookie(null, "token", token);
+      });
+    } else {
+      setCookie(null, "token", "");
+      console.log("no user, loser");
+    }
+  }, [user]);
+
   return (
     <Layout>
       <Typography component="p" sx={{ mt: 3 }}>
@@ -26,8 +41,9 @@ const SignInScreen: FC = () => {
         uiConfig={{
           // Redirect to / after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
           callbacks: {
-            signInSuccessWithAuthResult: (user) => {
+            signInSuccessWithAuthResult: (user: User) => {
               console.log("signInSuccess: user", { user });
+
               push("/votes");
               return false; // should redirect?
             },

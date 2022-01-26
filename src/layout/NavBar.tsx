@@ -7,6 +7,7 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  Button,
 } from "@mui/material";
 
 import * as React from "react";
@@ -32,20 +33,27 @@ export default function MenuAppBar() {
     push("/auth");
   };
 
-  const userMenu = (
-    <>
-      <MenuItem onClick={handleClose}>Profile</MenuItem>
-      <MenuItem onClick={handleClose}>My account</MenuItem>
-      <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
-    </>
-  );
-  const noUserMenu = (
-    <>
-      <MenuItem LinkComponent={Link} onClick={handleClose} href="/auth">
-        Sign In
-      </MenuItem>
-    </>
-  );
+  const userMenu = [
+    <MenuItem key="Profile" onClick={handleClose}>
+      Profile
+    </MenuItem>,
+    <MenuItem key="my_account" onClick={handleClose}>
+      My account
+    </MenuItem>,
+    <MenuItem key="sign_out" onClick={handleSignOut}>
+      Sign Out
+    </MenuItem>,
+  ];
+  const noUserMenu = [
+    <MenuItem
+      key="sign_in"
+      LinkComponent={Link}
+      onClick={handleClose}
+      href="/auth"
+    >
+      Sign In
+    </MenuItem>,
+  ];
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -54,6 +62,11 @@ export default function MenuAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Starter App
           </Typography>
+          <div>
+            <Button component={Link} href="/ssuser" color="inherit">
+              SSR check
+            </Button>
+          </div>
           <div>
             <IconButton
               size="large"
