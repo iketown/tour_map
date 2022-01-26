@@ -16,10 +16,10 @@ if (!admin.apps.length) {
   });
 }
 
-const firestore = admin.firestore();
+const adminDB = admin.firestore();
 const auth = admin.auth();
 
-export { firestore, auth };
+export { adminDB, auth };
 
 export const getUser = async (
   ctx: GetServerSidePropsContext<ParsedUrlQuery, any>

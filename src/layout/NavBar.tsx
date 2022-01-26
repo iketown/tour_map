@@ -45,14 +45,9 @@ export default function MenuAppBar() {
     </MenuItem>,
   ];
   const noUserMenu = [
-    <MenuItem
-      key="sign_in"
-      LinkComponent={Link}
-      onClick={handleClose}
-      href="/auth"
-    >
-      Sign In
-    </MenuItem>,
+    <Link href="/auth" key="sign_in" sx={{ textDecoration: "none" }}>
+      <MenuItem onClick={handleClose}>Sign In</MenuItem>
+    </Link>,
   ];
 
   return (
@@ -62,9 +57,20 @@ export default function MenuAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Starter App
           </Typography>
+
+          <div>
+            <Button component={Link} href="/votes" color="inherit">
+              Votes
+            </Button>
+          </div>
+          <div>
+            <Button component={Link} href="/ssdocs" color="inherit">
+              SSR docs
+            </Button>
+          </div>
           <div>
             <Button component={Link} href="/ssuser" color="inherit">
-              SSR check
+              SSR user
             </Button>
           </div>
           <div>
