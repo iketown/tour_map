@@ -15,22 +15,10 @@ import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 import { useAuth } from "~/hooks/auth/useAuth";
 import { setCookie } from "nookies";
-// Configure FirebaseUI.
 
 const SignInScreen: FC = () => {
   const { push } = useRouter();
   const [user, loading, error] = useAuth();
-  useEffect(() => {
-    if (user) {
-      console.log("user", user);
-      getIdToken(user).then((token) => {
-        setCookie(null, "token", token);
-      });
-    } else {
-      setCookie(null, "token", "");
-      console.log("no user, loser");
-    }
-  }, [user]);
 
   return (
     <Layout>

@@ -25,6 +25,13 @@ const ServerSideDoc: FC<ServerSideDocI> = ({ user, votes }) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { user } = await getUser(ctx);
+  if (!user)
+    return {
+      redirect: {
+        destination: "/nouser",
+        permanent: false,
+      },
+    };
   const votes = await adminDB
     .collection("votes")
     .get()

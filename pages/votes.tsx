@@ -2,7 +2,7 @@ import React from "react";
 import type { FC } from "react";
 import { Container, Box, Button, Grid } from "@mui/material";
 import { Check, Clear } from "@mui/icons-material";
-import { useAuth } from "~/hooks/auth/useAuth";
+
 import { collection, doc, setDoc } from "firebase/firestore";
 
 import {
@@ -11,9 +11,11 @@ import {
 } from "react-firebase-hooks/firestore";
 import Layout from "~/layout/Layout";
 import { db } from "~/utils/firebase/clientApp";
+import { useAuthCtx } from "../src/contexts/AuthCtx";
 
 const VotesIndex: FC = () => {
-  const [user, loading, error] = useAuth();
+  const { user, loading, error } = useAuthCtx();
+
   const [collValues, collLoading, collError, collSnap] = useCollectionData(
     collection(db, "votes")
   );
