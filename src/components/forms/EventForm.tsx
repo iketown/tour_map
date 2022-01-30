@@ -22,7 +22,7 @@ import FakeInfoButtons from "./FakeInfoButtons";
 import EventTimesReorderer from "./EventTimesReorderer";
 import { useEventFxns } from "~/hooks/formHooks/useEventFxns";
 
-const initialValues: EventRecord = {
+const initialValues: Partial<EventRecord> = {
   starts_at: new Date(),
   place_id: "",
   event_id: "",
