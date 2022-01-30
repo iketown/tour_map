@@ -14,6 +14,9 @@ const clientCredentials = {
 
 export const app = initializeApp(clientCredentials);
 export const db = getFirestore();
-connectFirestoreEmulator(db, "localhost", 8080);
 export const clientAuth = getAuth(app);
-connectAuthEmulator(clientAuth, "http://localhost:9099");
+
+if (process.env.NODE_ENV === "development") {
+  connectFirestoreEmulator(db, "localhost", 8080);
+  connectAuthEmulator(clientAuth, "http://localhost:9099");
+}
