@@ -5,22 +5,19 @@ import {
   CardHeader,
   Grid,
   Stack,
-  Drawer,
 } from "@mui/material";
+import arrayMutators from "final-form-arrays";
 import { Field, Form } from "react-final-form";
+import { useEventFxns } from "~/hooks/formHooks/useEventFxns";
 import GoogPlacesApi from "../google/GoogPlacesAPI";
 import { DatePickerInput } from "./DatePicker";
+import { eventFormValidator } from "./eventFormValidator";
+import EventTimesArray from "./EventTimesArray";
+import EventTimesReorderer from "./EventTimesReorderer";
+import FakeInfoButtons from "./FakeInfoButtons";
 import PlaceIdHandler from "./PlaceIdHandler";
 import TimeDisplay from "./TimeDisplay";
 import TZHandler from "./TZHandler";
-import { eventFormValidator } from "./eventFormValidator";
-import { FieldArray } from "react-final-form-arrays";
-import arrayMutators from "final-form-arrays";
-import EventTimesArray from "./EventTimesArray";
-
-import FakeInfoButtons from "./FakeInfoButtons";
-import EventTimesReorderer from "./EventTimesReorderer";
-import { useEventFxns } from "~/hooks/formHooks/useEventFxns";
 
 const initialValues: Partial<EventRecord> = {
   starts_at: new Date(),
