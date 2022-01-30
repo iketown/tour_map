@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "~/styles/theme";
 import createEmotionCache from "~/styles/createEmotionCache";
+import "react-clock/dist/Clock.css";
 import { AuthCtxProvider } from "~/contexts/AuthCtx";
 
 // Client-side cache, shared for the whole session of the user in the browser.

@@ -61,7 +61,7 @@ export default function MenuAppBar() {
             color="inherit"
             sx={{ flexGrow: 1 }}
           >
-            Starter App
+            Tour Map
           </Typography>
 
           <div>

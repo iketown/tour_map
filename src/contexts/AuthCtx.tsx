@@ -29,11 +29,11 @@ export const AuthCtxProvider: FC = ({ children }) => {
     const unsub = onIdTokenChanged(getAuth(app), async (user) => {
       console.log("id token changed", new Date().toTimeString(), user);
       if (user) {
-        console.log("user", user);
+        // console.log("user", user);
         const token = await getIdToken(user);
         setCookie(null, "token", token);
       } else {
-        console.log("no user, loser");
+        // console.log("no user, loser");
         setCookie(null, "token", "");
       }
     });
