@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "~/layout/Layout";
-import EventForm from "~/components/forms/EventForm";
+import EventForm from "~/components/forms/event_form/EventForm";
 import LinkButton from "~/components/LinkButton";
 const AddEventPage = () => {
   return (

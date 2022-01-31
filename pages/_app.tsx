@@ -8,6 +8,7 @@ import theme from "~/styles/theme";
 import createEmotionCache from "~/styles/createEmotionCache";
 import "react-clock/dist/Clock.css";
 import { AuthCtxProvider } from "~/contexts/AuthCtx";
+import { SnackbarProvider } from "notistack";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -25,9 +26,11 @@ export default function MyApp(props: MyAppProps) {
       </Head>
       <AuthCtxProvider>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
+          <SnackbarProvider>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </SnackbarProvider>
         </ThemeProvider>
       </AuthCtxProvider>
     </CacheProvider>
