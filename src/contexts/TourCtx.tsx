@@ -7,10 +7,7 @@ interface TourCtxI {
   tour_id: string;
   tourInfo?: Tour;
 }
-const TourCtx = createContext<TourCtxI>({
-  tour_id: "",
-  tourInfo: {},
-});
+const TourCtx = createContext<TourCtxI>({} as TourCtxI);
 
 interface TourCtxProviderI {
   tour_id: string;

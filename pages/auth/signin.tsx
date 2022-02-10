@@ -13,15 +13,14 @@ import {
   Typography,
 } from "@mui/material";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import nookies from "nookies";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import Copyright from "~/components/Copyright";
 import { useAuthCtx } from "~/contexts/AuthCtx";
 import { useToast } from "~/hooks/useToast";
-import { signInUser, createUser } from "~/utils/firebase/authFxns";
 import Layout from "~/layout/Layout";
-import nookies, { setCookie, parseCookies } from "nookies";
-import { useRouter } from "next/router";
+import { signInUser } from "~/utils/firebase/authFxns";
 
 interface FormValues {
   email: string;
@@ -186,7 +185,6 @@ export default function SignIn() {
                   </Grid>
                 </Box>
               </Box>
-              <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
           );
         }}

@@ -15,11 +15,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       departureDate: "2022-07-01",
       adults: "1",
     })
-    .then(function (data) {
+    .then(function (data: any) {
       console.log(JSON.stringify(data));
       return res.status(200).json(data);
     })
-    .catch(function (responseError) {
+    .catch(function (responseError: any) {
       console.log(JSON.stringify(responseError));
       return res.status(400).json(responseError);
     });

@@ -34,7 +34,7 @@ const GC_login_logout: React.FC = () => {
   };
   const getEvent = (event_id: string) => {
     if (ApiCalendar.sign) {
-      ApiCalendar.getEvent(event_id).then(({ result }) => {
+      ApiCalendar.getEvent(event_id).then(({ result }: any) => {
         console.log(result);
         setSummary(result.summary);
         setEventId(result.id);

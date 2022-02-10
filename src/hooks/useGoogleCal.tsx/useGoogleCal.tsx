@@ -1,5 +1,6 @@
 //@ts-ignore
 import { useCallback, useEffect, useState } from "react";
+//@ts-ignore
 import ApiCalendar from "react-google-calendar-api";
 import { format, add } from "date-fns";
 
@@ -14,7 +15,7 @@ export const useGoogleCal = () => {
     ApiCalendar.onLoad(() => {
       setIsLoaded(true);
       if (ApiCalendar.sign) setSignedIn(true);
-      ApiCalendar.listenSign((sign) => {
+      ApiCalendar.listenSign((sign: boolean) => {
         setSignedIn(sign);
       });
     });
@@ -66,7 +67,7 @@ export const useGoogleCal = () => {
         timeMin: startDate.toISOString(),
         timeMax: endDate.toISOString(),
         showDeleted: false,
-      }).then((response) => {
+      }).then((response: any) => {
         console.log("response", response);
         return response?.result?.items;
       });
@@ -103,10 +104,10 @@ export const useGoogleCal = () => {
       },
     };
     return ApiCalendar.updateEvent(updateObj, event_id, calendar_id)
-      .then((response) => {
+      .then((response: any) => {
         console.log("api cal response update", response);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log("update ERROR", err);
       });
   };

@@ -8,7 +8,6 @@ import { Box } from "@mui/material";
 
 import DataView from "../../components/DataView";
 import Pin from "./Pin";
-import MapMarker2 from "./MapMarker2";
 import { getMyArcRoute } from "./tourmap.helper";
 import { FaMapMarkerAlt, FaMapMarker } from "react-icons/fa";
 

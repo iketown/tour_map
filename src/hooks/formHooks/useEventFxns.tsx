@@ -76,8 +76,9 @@ export const useEventFxns = () => {
       if (!place || !time_zone) return;
       // check if place already exists by place_id
       const placeP = createPlace(place);
-      let googP = Promise.resolve("ok");
+      let googP = Promise.resolve();
       if (goog_cal_id) {
+        //@ts-ignore
         googP = updateGoogEvent({ goog_cal_id, event_id });
       }
       const eventP = setDoc(

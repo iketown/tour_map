@@ -47,7 +47,7 @@ const EventForm: React.FC<EventFormI> = ({ event, defaultDate, closeForm }) => {
 
   const handleDelete = (event_id: string) => {
     deleteEvent(event_id);
-    closeForm();
+    closeForm && closeForm();
   };
 
   return (

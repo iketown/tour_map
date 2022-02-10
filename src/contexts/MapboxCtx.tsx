@@ -10,7 +10,7 @@ interface MapboxCtxI {
   toggleHiddenLeg: (legId: string) => void;
 }
 
-const MapboxCtx = createContext<MapboxCtxI>({});
+const MapboxCtx = createContext<MapboxCtxI>({} as MapboxCtxI);
 
 export const MapboxCtxProvider: React.FC = ({ children }) => {
   const { legObj } = useLegs();

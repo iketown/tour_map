@@ -62,7 +62,7 @@ const GigCard: React.FC<GigCardI> = ({ calEvent }) => {
   const [value, setValue] = useState("");
   const { updateKey, updateExtendedProps } = useGoogleCal();
 
-  const handleSelectedPlace = (place) => {
+  const handleSelectedPlace = (place: any) => {
     console.log("selected place", place);
     const placeId = place?.place_id;
     if (!!placeId) {

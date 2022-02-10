@@ -1,23 +1,19 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { Form, Field } from "react-final-form";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
-import Copyright from "~/components/Copyright";
-import { useAuthCtx } from "~/contexts/AuthCtx";
 import { useRouter } from "next/router";
-import { createUser } from "~/utils/firebase/authFxns";
+import * as React from "react";
+import { Field, Form } from "react-final-form";
 import Layout from "~/layout/Layout";
+import { createUser } from "~/utils/firebase/authFxns";
 
 interface FormValues {
   email: string;
@@ -183,7 +179,6 @@ export default function SignUp() {
                   </Grid>
                 </Box>
               </Box>
-              <Copyright sx={{ mt: 5 }} />
             </Container>
           );
         }}

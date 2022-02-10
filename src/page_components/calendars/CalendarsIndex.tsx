@@ -1,30 +1,16 @@
-import {
-  Typography,
-  Link,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  TextField,
-  Box,
-  Divider,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import { Form, Field } from "react-final-form";
+import { CheckCircle, CircleOutlined } from "@mui/icons-material";
+import { Box, Button, Divider, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import DataView from "~/components/DataView";
+import TextOrField from "~/components/TextOrField";
+import { useTourCtx } from "~/contexts/TourCtx";
+import { useTourFxns } from "~/hooks/formHooks/useTourFxns";
 import { useGoogleCal } from "~/hooks/useGoogleCal.tsx/useGoogleCal";
 import Layout from "~/layout/Layout";
-import DataView from "~/components/DataView";
-import { CheckCircle, CircleOutlined } from "@mui/icons-material";
-import { useTourFxns } from "~/hooks/formHooks/useTourFxns";
-import { useTourCtx } from "~/contexts/TourCtx";
-import { Save, Cancel } from "@mui/icons-material";
-import TextOrField from "~/components/TextOrField";
-import { TourCtxProvider } from "../../contexts/TourCtx";
-import { useRouter } from "next/router";
+import { TourCtxProvider } from "~/contexts/TourCtx";
 
-const ListBox = ({ children }) => (
+const ListBox: React.FC = ({ children }) => (
   <Box sx={{ p: 1 }}>
     {children}
     <Divider sx={{ m: 2 }} />
@@ -48,7 +34,7 @@ const CalendarsIndex = () => {
       <h3>Calendars</h3>
       <DataView data={{ isSignedIn }} title="googleCal data" />
       <DataView data={{ tourInfo }} title="tourInfo" />
-      <ListBox divider>
+      <ListBox>
         <Typography>
           1.{" "}
           <Button

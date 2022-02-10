@@ -12,7 +12,7 @@ interface ToursIndexI {
   // myTours: { [tour_id: string]: Tour };
 }
 const ToursIndex: React.FC<ToursIndexI> = ({}) => {
-  const [myTours, setMyTours] = useState({});
+  const [myTours, setMyTours] = useState<{ [tour_id: string]: Tour }>({});
   const { user_id } = useAuthCtx();
   useEffect(() => {
     if (!user_id) return;

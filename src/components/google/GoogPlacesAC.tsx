@@ -85,7 +85,7 @@ const GooglePlacesAutoComplete: React.FC<GPACi> = ({
   useEffect(() => {
     let active = true;
 
-    if (inputValue === "") {
+    if (!inputValue) {
       setOptions(value ? [value] : []);
       return;
     }
