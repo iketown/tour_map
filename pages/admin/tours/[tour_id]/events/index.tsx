@@ -7,6 +7,8 @@ import { Button, List, ListItem, ListItemButton } from "@mui/material";
 import NextLink from "next/link";
 import LinkButton from "~/components/LinkButton";
 import { useRouter } from "next/router";
+import TourEventList from "~/page_components/tourid/TourEventList";
+
 const EventsIndex = () => {
   const [events, setEvents] = useState<{ [event_id: string]: EventRecord }>({});
   const { push } = useRouter();
@@ -28,21 +30,7 @@ const EventsIndex = () => {
       <LinkButton href="/admin/events/add" variant="contained">
         Add Event
       </LinkButton>
-      <List>
-        {events &&
-          Object.entries(events).map(([event_id, event]) => {
-            return (
-              <ListItemButton
-                key={event_id}
-                onClick={() => {
-                  push(`/admin/events/[event_id]`, `/admin/events/${event_id}`);
-                }}
-              >
-                {event_id}
-              </ListItemButton>
-            );
-          })}
-      </List>
+      <TourEventList />
       <pre style={{ fontSize: 10 }}>{JSON.stringify(events, null, 2)}</pre>
     </Layout>
   );

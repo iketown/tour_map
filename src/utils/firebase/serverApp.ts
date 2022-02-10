@@ -21,11 +21,15 @@ const auth = admin.auth();
 
 export { adminDB, auth };
 
-export const getUser = async (
+export const getUser = (
   ctx: GetServerSidePropsContext<ParsedUrlQuery, any>
 ) => {
   const { token } = nookies.get(ctx);
-  if (!token) return { user: null, itWorked: "nope" };
-  const user = await admin.auth().verifyIdToken(token);
-  return { user, itWorked: "yep" };
+  return admin.auth().verifyIdToken(token);
 };
+
+// https://firebase.google.com/docs/emulator-suite/connect_auth#node.js-admin-sdk
+
+// how to kill if port still running:
+// sudo lsof -i :8080
+// kill -9 <PID>

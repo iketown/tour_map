@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import "firebase/auth";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const clientCredentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,11 +12,33 @@ const clientCredentials = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+console.log("getApps", getApps());
 export const app = initializeApp(clientCredentials);
 export const db = getFirestore();
 export const clientAuth = getAuth(app);
 
+// const getIdTokenPromise = () => {
+//   return new Promise((resolve, reject) => {
+//     const unsubscribe = onAuthStateChanged(clientAuth, (user) => {
+//       unsubscribe();
+//       if (user) {
+//         getIdToken(user).then(
+//           (idToken) => {
+//             resolve(idToken);
+//           },
+//           (error) => {
+//             resolve(null);
+//           }
+//         );
+//       } else {
+//         resolve(null);
+//       }
+//     });
+//   });
+// };
+
 if (process.env.NODE_ENV === "development") {
+  // console.log("setting up EMULATORS");
   connectFirestoreEmulator(db, "localhost", 8080);
-  connectAuthEmulator(clientAuth, "http://localhost:9099");
+  connectAuthEmulator(getAuth(app), "http://localhost:9099");
 }

@@ -40,8 +40,8 @@ export default ServerSideUser;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const foo = "bar";
-  const { user, itWorked } = await getUser(ctx);
+  const user = await getUser(ctx);
   return {
-    props: { foo, itWorked, user },
+    props: { user },
   };
 };

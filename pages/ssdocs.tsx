@@ -34,7 +34,7 @@ const ServerSideDoc: FC<ServerSideDocI> = ({ user, votes }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { user } = await getUser(ctx);
+  const user = await getUser(ctx);
   if (!user)
     return {
       redirect: {

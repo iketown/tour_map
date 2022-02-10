@@ -14,12 +14,16 @@ import * as React from "react";
 import { useAuth, signOutUser } from "~/hooks/auth/useAuth";
 
 import Link from "~/components/Link";
+
 import { useRouter } from "next/router";
+import LinkButton from "~/components/LinkButton";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [user, loading, error] = useAuth();
-  const { push } = useRouter();
+
+  const { push, query } = useRouter();
+  const tour_id = query.tour_id as string | undefined;
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -30,12 +34,18 @@ export default function MenuAppBar() {
   const handleSignOut = async () => {
     await signOutUser();
     handleClose();
-    push("/auth");
+    push("/auth/signin");
   };
 
   const userMenu = [
-    <MenuItem key="Profile" onClick={handleClose}>
-      Profile
+    <MenuItem
+      key="Profile"
+      onClick={() => {
+        push("/admin");
+        handleClose();
+      }}
+    >
+      {user?.email || "no email"}
     </MenuItem>,
     <MenuItem key="my_account" onClick={handleClose}>
       My account
@@ -45,7 +55,7 @@ export default function MenuAppBar() {
     </MenuItem>,
   ];
   const noUserMenu = [
-    <Link href="/auth" key="sign_in" sx={{ textDecoration: "none" }}>
+    <Link href="/auth/signin" key="sign_in" sx={{ textDecoration: "none" }}>
       <MenuItem onClick={handleClose}>Sign In</MenuItem>
     </Link>,
   ];
@@ -63,22 +73,23 @@ export default function MenuAppBar() {
           >
             Tour Map
           </Typography>
+          {tour_id && (
+            <div>
+              <LinkButton
+                color="inherit"
+                href="/admin/tours/[tour_id]/gcal"
+                as={`/admin/tours/${tour_id}/gcal`}
+              >
+                Google Cal
+              </LinkButton>
+            </div>
+          )}
+          <div>
+            <Button component={Link} href="/admin/tours" color="inherit">
+              Tours
+            </Button>
+          </div>
 
-          <div>
-            <Button component={Link} href="/votes" color="inherit">
-              Votes
-            </Button>
-          </div>
-          <div>
-            <Button component={Link} href="/ssdocs" color="inherit">
-              SSR docs
-            </Button>
-          </div>
-          <div>
-            <Button component={Link} href="/ssuser" color="inherit">
-              SSR user
-            </Button>
-          </div>
           <div>
             <IconButton
               size="large"

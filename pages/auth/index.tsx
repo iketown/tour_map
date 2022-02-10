@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import type { FC } from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import type { User } from "firebase/auth";
-import { getIdToken } from "firebase/auth";
 import { clientAuth } from "~/utils/firebase/clientApp";
 import {
   GoogleAuthProvider,
@@ -16,7 +15,7 @@ import { Typography, LinearProgress } from "@mui/material";
 import { useAuthCtx } from "~/contexts/AuthCtx";
 
 const SignInScreen: FC = () => {
-  const { push } = useRouter();
+  const { push, back } = useRouter();
   const { user, loading, error } = useAuthCtx();
 
   return (
