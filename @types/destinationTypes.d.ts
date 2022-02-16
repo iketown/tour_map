@@ -35,7 +35,23 @@ interface Place {
   // }[];
 }
 
-interface Hotel extends Place {
+interface Poi {
+  lat: number;
+  lng: number;
+  type: string;
+}
+
+interface HotelPoi extends Poi {
   company: string;
   hotel_name: string;
+}
+interface AirportPoi extends Poi {
+  type: "airport";
+  name: string;
+  city: string;
+  country: string;
+  iata_code: string;
+  links_count: number;
+  objectID: string;
+  distanceKm?: number;
 }

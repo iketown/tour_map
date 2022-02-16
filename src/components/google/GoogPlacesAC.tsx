@@ -44,6 +44,9 @@ interface GPACi {
   otherInputProps?: any;
   hasError?: boolean;
   errorMessage?: string;
+  location?: { lat: number; lng: number };
+  radius?: number;
+  types?: string[];
 }
 
 const GooglePlacesAutoComplete: React.FC<GPACi> = ({
@@ -53,6 +56,9 @@ const GooglePlacesAutoComplete: React.FC<GPACi> = ({
   otherInputProps,
   hasError,
   errorMessage,
+  location,
+  radius,
+  types,
 }) => {
   const [value, setValue] = useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = useState(defaultInputValue);
@@ -68,7 +74,7 @@ const GooglePlacesAutoComplete: React.FC<GPACi> = ({
     () =>
       throttle(
         (
-          request: { input: string },
+          request: google.maps.places.AutocompletionRequest,
           callback: (results: readonly PlaceType[] | null) => void
         ) => {
           if (acService) {
@@ -90,26 +96,33 @@ const GooglePlacesAutoComplete: React.FC<GPACi> = ({
       return;
     }
 
-    fetch({ input: inputValue }, (results: readonly PlaceType[] | null) => {
-      if (active) {
-        let newOptions: readonly PlaceType[] = [];
+    fetch(
+      {
+        input: inputValue,
+        location: location ? new google.maps.LatLng(location) : undefined,
+        radius,
+      },
+      (results: readonly PlaceType[] | null) => {
+        if (active) {
+          let newOptions: readonly PlaceType[] = [];
 
-        if (value) {
-          newOptions = [value];
+          if (value) {
+            newOptions = [value];
+          }
+
+          if (results) {
+            newOptions = [...newOptions, ...results];
+          }
+
+          setOptions(newOptions);
         }
-
-        if (results) {
-          newOptions = [...newOptions, ...results];
-        }
-
-        setOptions(newOptions);
       }
-    });
+    );
 
     return () => {
       active = false;
     };
-  }, [value, inputValue, fetch]);
+  }, [value, inputValue, fetch, location, radius]);
 
   return (
     <>

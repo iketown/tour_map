@@ -28,30 +28,49 @@ import EventFormDialog from "~/components/forms/event_form/EventFormDialog";
 import { useMapboxCtx } from "~/contexts/MapboxCtx";
 import { useTourCtx } from "~/contexts/TourCtx";
 import { useLegs } from "~/hooks/useLegs";
+import { useSelector } from "@xstate/react";
+import TravelDivider from "./TravelDivider";
 
 // https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#line
 
 const TourLegEventList = () => {
   const { tourInfo, tour_id } = useTourCtx();
   const { legObj, orderedEvents } = useLegs();
-  const { selectedLeg, setSelectedLeg } = useMapboxCtx();
+  const {
+    // selectedLeg,
+    setSelectedLeg,
+    // selectedEventId,
+    selectEvent,
+    mapService,
+  } = useMapboxCtx();
   // const eventsBasic = tourInfo?.events_basic;
+  const selectedEventId = useSelector(
+    mapService,
+    ({ context }) => context.selectedEventId
+  );
+  const selectedLeg = useSelector(
+    mapService,
+    ({ context }) => context.selectedLegId
+  );
+
   const lastGig =
     orderedEvents?.ordered &&
     orderedEvents.ordered[orderedEvents.ordered.length - 1];
   const lastDate = lastGig?.date;
-  const [selectedEventId, setSelectedEventId] = useState("");
+
   return (
     <EventFormDialog event_id={selectedEventId}>
       {({ openForm }) => {
         const handleEditEvent = (event_id: string) => {
-          setSelectedEventId(event_id);
+          selectEvent(event_id);
           openForm();
         };
         return (
           <List sx={{ maxWidth: "400px" }} dense>
             {legObj &&
-              Object.entries(legObj).map(([leg_id, leg]) => {
+              Object.entries(legObj).map(([leg_id, leg], legIndex, legArr) => {
+                const isLastLeg = legIndex === legArr.length - 1;
+                const isFirstLeg = legIndex === 0;
                 const { first, last, color } = leg;
                 const dateText = [first, last].map((gig) =>
                   formatInTimeZone(gig.date, gig.tz, "MMM d")
@@ -65,9 +84,10 @@ const TourLegEventList = () => {
                     key={leg_id}
                     expanded={selectedLeg === leg_id}
                     onChange={(e, exp) => {
-                      if (exp) {
-                        setSelectedLeg(leg_id);
-                      } else setSelectedLeg("");
+                      mapService.send({
+                        type: "TOGGLE_SELECTED_LEG",
+                        payload: { leg_id, open: exp },
+                      });
                     }}
                   >
                     <AccordionSummary
@@ -105,7 +125,7 @@ const TourLegEventList = () => {
                       }}
                     >
                       <List dense>
-                        {leg.events?.map((evt) => {
+                        {leg.events?.map((evt, eventIndex, eventArr) => {
                           const {
                             city,
                             state,
@@ -115,9 +135,23 @@ const TourLegEventList = () => {
                             tz,
                             event_id,
                           } = evt;
+                          const isSelected = selectedEventId === event_id;
+                          const nextEvent = eventArr[eventIndex + 1];
                           return (
                             <Fragment key={event_id}>
-                              <ListItem>
+                              {eventIndex === 0 && (
+                                <TravelDivider toEventId={event_id} />
+                              )}
+                              <ListItemButton
+                                selected={isSelected}
+                                onClick={() =>
+                                  // selectEvent(isSelected ? "" : event_id)
+                                  mapService.send({
+                                    type: "TOGGLE_SELECTED_EVENT",
+                                    payload: { event_id, open: !isSelected },
+                                  })
+                                }
+                              >
                                 <ListItemIcon sx={{ mr: 1 }}>
                                   <DateBox date={date} tz={tz} />
                                 </ListItemIcon>
@@ -134,12 +168,11 @@ const TourLegEventList = () => {
                                     <Edit />
                                   </IconButton>
                                 </ListItemSecondaryAction>
-                              </ListItem>
-                              <Divider>
-                                <Typography variant="overline" color="GrayText">
-                                  4 hr drive
-                                </Typography>
-                              </Divider>
+                              </ListItemButton>
+                              <TravelDivider
+                                fromEventId={event_id}
+                                toEventId={nextEvent ? nextEvent.event_id : ""}
+                              />
                             </Fragment>
                           );
                         })}

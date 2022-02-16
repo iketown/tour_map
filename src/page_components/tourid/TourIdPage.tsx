@@ -1,20 +1,17 @@
-import type { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import { Box, CircularProgress, Divider, Grid } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
-import Layout from "~/layout/Layout";
-import TextOrField from "~/components/TextOrField";
-import { useTourFxns } from "~/hooks/formHooks/useTourFxns";
-import { TourCtxProvider, useTourCtx } from "~/contexts/TourCtx";
-import TourLegEventList from "./TourLegEventList";
-import { MapWrap, useMapCtx } from "~/utils/googleMap/MapWrap";
-import { Button, Grid, CircularProgress, Box } from "@mui/material";
-import { useLegFxns } from "~/hooks/formHooks/useLegFxns";
-import { useLegs } from "~/hooks/useLegs";
-import DataView from "~/components/DataView";
 import LinkButton from "~/components/LinkButton";
-import dynamic from "next/dynamic";
-import TourMap2 from "./TourMap";
-import { MapboxCtxProvider, useMapboxCtx } from "~/contexts/MapboxCtx";
+import TextOrField from "~/components/TextOrField";
+import { MapboxCtxProvider } from "~/contexts/MapboxCtx";
+import { TourCtxProvider, useTourCtx } from "~/contexts/TourCtx";
+import { useTourFxns } from "~/hooks/formHooks/useTourFxns";
+import Layout from "~/layout/Layout";
+import { MapWrap } from "~/utils/googleMap/MapWrap";
+import TourLegEventList from "./TourLegEventList";
+import TourMap from "../../components/mapbox/TourMap";
+import DataView from "../../components/DataView";
+import MapInfoSwitch from "./infobox/MapInfoSwitch";
 
 interface TourIdPageI {
   tour_id: string;
@@ -53,10 +50,9 @@ const TourIdPage: React.FC<TourIdPageI> = ({ tour_id }) => {
               <TourLegEventList />
             </Grid>
             <Grid item xs={12} sm={7}>
-              {/* <DataView data={orderedEvents} title="orderedEvents" />
-              <DataView data={legArr} title="legArr" />
-              <DataView data={legObj} title="legObj" /> */}
-              <TourMap2 />
+              <TourMap />
+              <Divider sx={{ my: 1 }} />
+              <MapInfoSwitch />
             </Grid>
           </Grid>
         </>
@@ -80,13 +76,13 @@ const WrappedTourPage: React.FC = ({}) => {
   const { query } = useRouter();
   const tour_id = query.tour_id as string;
   return (
-    <MapboxCtxProvider>
+    <TourCtxProvider tour_id={tour_id}>
       <MapWrap>
-        <TourCtxProvider tour_id={tour_id}>
+        <MapboxCtxProvider>
           <TourIdPage tour_id={tour_id} />
-        </TourCtxProvider>
+        </MapboxCtxProvider>
       </MapWrap>
-    </MapboxCtxProvider>
+    </TourCtxProvider>
   );
 };
 export default WrappedTourPage;

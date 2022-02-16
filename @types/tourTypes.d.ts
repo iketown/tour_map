@@ -38,3 +38,7 @@ interface EventBasic {
   first_of_leg: boolean;
   goog_cal_id?: string;
 }
+
+interface AllEventsBasic {
+  [event_id: string]: EventBasic;
+}

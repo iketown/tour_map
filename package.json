@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@date-io/date-fns": "^2.13.1",
+    "@duffel/api": "^1.7.8",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/server": "latest",
@@ -23,6 +24,7 @@
     "@sanity/client": "^2.23.2",
     "@turf/turf": "^6.5.0",
     "@ubilabs/google-maps-react-hooks": "^1.5.1",
+    "@xstate/react": "^2.0.0",
     "amadeus": "^5.7.1",
     "autosuggest-highlight": "^3.2.0",
     "axios": "^0.25.0",
@@ -59,7 +61,9 @@
     "react-mapbox-gl": "^5.1.1",
     "reactjs-google-calendar": "^2.1.4",
     "slugify": "^1.6.5",
-    "use-places-autocomplete": "^1.11.0"
+    "tiny-invariant": "^1.2.0",
+    "use-places-autocomplete": "^1.11.0",
+    "xstate": "^4.29.0"
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.0",
@@ -72,6 +76,7 @@
     "@types/react-copy-to-clipboard": "^5.0.2",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "type-fest": "^2.11.2",
     "typescript": "latest"
   }
 }

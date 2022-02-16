@@ -18,6 +18,7 @@ const DataView: React.FC<DataViewI> = ({ data, title }) => {
     <Box component="span" mx={1}>
       <Button
         variant="outlined"
+        color="secondary"
         size="small"
         onClick={() => setDrawerOpen(true)}
       >

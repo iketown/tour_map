@@ -3,6 +3,25 @@ import { useMemo } from "react";
 import { legColors } from "../utils/mapBox/legColors";
 import type { Color } from "@mui/material";
 
+export type LegObj = {
+  [leg_id: string]: {
+    events: EventBasic[];
+    color: Color;
+    first: {
+      city: string;
+      state: string;
+      date: number;
+      tz: string;
+    };
+    last: {
+      city: string;
+      state: string;
+      date: number;
+      tz: string;
+    };
+  };
+};
+
 export const useLegs = () => {
   const { tourInfo } = useTourCtx();
   const orderedEvents = useMemo(() => {
@@ -32,54 +51,30 @@ export const useLegs = () => {
     return _legArr;
   }, [orderedEvents]);
 
-  const legObj = legArr?.reduce(
-    (
-      obj: {
-        [leg_id: string]: {
-          events: EventBasic[];
-          color: Color;
-          first: {
-            city: string;
-            state: string;
-            date: number;
-            tz: string;
-          };
-          last: {
-            city: string;
-            state: string;
-            date: number;
-            tz: string;
-          };
-        };
-      },
-      leg,
-      index
-    ) => {
-      const firstGig = leg[0];
-      const lastGig = leg[leg.length - 1];
-      const leg_id = `leg_${firstGig.event_id}`;
-      const placeH = "..";
+  const legObj = legArr?.reduce((obj: LegObj, leg, index) => {
+    const firstGig = leg[0];
+    const lastGig = leg[leg.length - 1];
+    const leg_id = `leg_${firstGig.event_id}`;
+    const placeH = "..";
 
-      obj[leg_id] = {
-        color: legColors[index % legColors.length],
-        events: leg,
-        first: {
-          city: firstGig?.city || placeH,
-          state: firstGig?.state || placeH,
-          date: firstGig.date,
-          tz: firstGig.tz,
-        },
-        last: {
-          city: lastGig?.city || placeH,
-          state: lastGig?.state || placeH,
-          date: lastGig.date,
-          tz: lastGig.tz,
-        },
-      };
-      return obj;
-    },
-    {}
-  );
+    obj[leg_id] = {
+      color: legColors[index % legColors.length],
+      events: leg,
+      first: {
+        city: firstGig?.city || placeH,
+        state: firstGig?.state || placeH,
+        date: firstGig.date,
+        tz: firstGig.tz,
+      },
+      last: {
+        city: lastGig?.city || placeH,
+        state: lastGig?.state || placeH,
+        date: lastGig.date,
+        tz: lastGig.tz,
+      },
+    };
+    return obj;
+  }, {});
 
   return { orderedEvents, legArr, legObj };
 };

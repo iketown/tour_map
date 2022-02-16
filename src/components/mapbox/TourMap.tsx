@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import { bbox, lineString, bezier } from "@turf/turf";
-import Map, { Marker, Source, Layer } from "react-map-gl";
-import type { MapRef, LineLayer } from "react-map-gl";
-import { useMapboxCtx } from "~/contexts/MapboxCtx";
-import { useLegs } from "~/hooks/useLegs";
 import { Box } from "@mui/material";
+import { lineString } from "@turf/turf";
+import { useSelector } from "@xstate/react";
+import React from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import Map, { Layer, Marker, Source } from "react-map-gl";
+import { useMapboxCtx } from "~/contexts/MapboxCtx";
+import { useTourCtx } from "~/contexts/TourCtx";
+import { useLegs } from "~/hooks/useLegs";
+import PoiMarkers from "./PoiMarkers";
 
-import DataView from "../../components/DataView";
-import Pin from "./Pin";
 import { getMyArcRoute } from "./tourmap.helper";
-import { FaMapMarkerAlt, FaMapMarker } from "react-icons/fa";
+import AirportMarkers from "./AirportMarkers";
 
 function TourMap() {
-  const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = React.useState({
     longitude: -100,
     latitude: 40,
@@ -26,25 +26,30 @@ function TourMap() {
       right: 0,
     },
   });
-  const { selectedLeg } = useMapboxCtx();
+  const { mapService } = useMapboxCtx();
   const { legObj, orderedEvents } = useLegs();
-  const selectedLegInfo = selectedLeg ? legObj[selectedLeg] : null;
+  const { tourInfo } = useTourCtx();
+
+  const mapAirports = useSelector(
+    mapService,
+    ({ context }) => context.mapAirports
+  );
+
+  const ctxMap = useSelector(mapService, ({ context }) => context.map);
+
+  const selectedLegId = useSelector(
+    mapService,
+    ({ context }) => context.selectedLegId
+  );
+  const selectedEventId = useSelector(
+    mapService,
+    ({ context }) => context.selectedEventId
+  );
+  const selectedLegInfo = selectedLegId ? legObj[selectedLegId] : null;
+
   const events = selectedLegInfo
     ? selectedLegInfo.events
     : orderedEvents?.ordered;
-
-  const line = useMemo(() => {
-    return (
-      events &&
-      events.length > 1 &&
-      lineString(
-        events.map((ev) => {
-          const { lat, lng } = ev.loc;
-          return [lng, lat];
-        })
-      )
-    );
-  }, [events]);
 
   const eventSegments =
     events &&
@@ -62,67 +67,20 @@ function TourMap() {
       })
       .filter((a) => !!a);
 
-  useEffect(() => {
-    if (!line) return;
-    console.log({ line });
-    const [minLng, minLat, maxLng, maxLat] = bbox(line);
-    mapRef.current?.fitBounds(
-      [
-        [minLng, minLat],
-        [maxLng, maxLat],
-      ],
-      { padding: 40, duration: 1000, maxZoom: 7 }
-    );
-  }, [line]);
-
-  useEffect(() => {
-    // single event
-    if (!events || events?.length !== 1) return;
-    const oneEvent = events[0];
-    console.log({ oneEvent });
-    const { lat, lng } = oneEvent.loc;
-    console.log;
-    mapRef.current?.flyTo({
-      center: [lng, lat],
-      duration: 1000,
-      zoom: 7,
-    });
-    // setViewState((old) => ({
-    //   ...old,
-    //   longitude: lng,
-    //   latitude: lat,
-    //   zoom: 5.5,
-    // }));
-  }, [events]);
-
   return (
     <div>
       <Map
-        ref={mapRef}
+        ref={(map) => {
+          if (map && !ctxMap) {
+            mapService.send({ type: "LOAD_MAP", payload: { map } });
+          }
+        }}
         {...viewState}
         onMove={(e) => setViewState(e.viewState)}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_KEY!}
         style={{ width: "100%", height: 400 }}
         mapStyle="mapbox://styles/mapbox/light-v9"
       >
-        {/* {line && selectedLeg &&  (
-          <Source id="line_layer" type="geojson" data={line}>
-            <Layer
-              id="lineLayer"
-              type="line"
-              source="my-data"
-              layout={{
-                "line-join": "round",
-                "line-cap": "round",
-              }}
-              paint={{
-                "line-color": "rgba(3, 170, 238, 0.5)",
-                "line-width": 3,
-              }}
-            />
-          </Source>
-        )} */}
-
         {/* {eventSegments?.length &&
           eventSegments.map((seg, i) => {
             if (!seg) return null;
@@ -154,44 +112,54 @@ function TourMap() {
             );
           })}
 
-        {/* {line && (
-          <Source type="geojson" data={line}>
-            <Layer type="line" id="my_line_attempt" interactive />
-          </Source>
-        )} */}
-
         {legObj &&
           Object.entries(legObj).map(([legId, leg]) => {
             const { events, color } = leg;
-            const isSelected = legId === selectedLeg;
+            const legSelected = legId === selectedLegId;
             return events?.map((event) => {
               const { lat, lng } = event.loc;
+              const { event_id } = event;
+              const eventSelected = event_id === selectedEventId;
               return (
                 <Marker
-                  key={event.event_id}
-                  style={{ opacity: isSelected ? 1 : 0.3 }}
+                  key={event_id}
+                  style={{ opacity: legSelected ? 1 : 0.3 }}
                   latitude={lat}
                   longitude={lng}
                   anchor="bottom"
                 >
-                  {/* <MapMarker2
-                    color={color}
+                  <Box
+                    sx={{ position: "relative", bottom: -5, cursor: "pointer" }}
                     onClick={() => {
-                      console.log("pin", event);
+                      console.log("clicked", event);
+                      mapService.send({
+                        type: "TOGGLE_SELECTED_EVENT",
+                        payload: {
+                          event_id,
+                          open: true,
+                        },
+                      });
                     }}
-                  /> */}
-                  <Box sx={{ position: "relative", bottom: -5 }}>
+                  >
                     <FaMapMarkerAlt
-                      style={{ width: 25, height: 25, color: color[500] }}
+                      style={{
+                        width: 25,
+                        height: 25,
+                        color: color[500],
+                        transition: "transform .5s",
+                        transformOrigin: "bottom center",
+                        transform: `scale(${eventSelected ? "1.5" : 0.8})`,
+                      }}
                     />
                   </Box>
                 </Marker>
               );
             });
           })}
+        <PoiMarkers />
+        <AirportMarkers />
       </Map>
-      <DataView data={legObj} title="legObj" />
-      <pre style={{ fontSize: 10 }}>{JSON.stringify(viewState, null, 2)}</pre>
+      {/* {!!selectedEvent && <SelectedEventView />} */}
     </div>
   );
 }

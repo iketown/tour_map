@@ -8,6 +8,7 @@ import {
   green,
   amber,
   deepOrange,
+  yellow,
   brown,
   grey,
 } from "@mui/material/colors";
@@ -24,5 +25,16 @@ export const legColors: Color[] = [
   blue,
   deepOrange,
   cyan,
+  brown,
+];
+
+export const rainbow: Color[] = [
+  red,
+  deepOrange,
+  yellow,
+  green,
+  cyan,
+  blue,
+  indigo,
   brown,
 ];

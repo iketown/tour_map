@@ -20,7 +20,10 @@ export const TourCtxProvider: React.FC<TourCtxProviderI> = ({
   const [tourInfo, setTourInfo] = useState<Tour>();
 
   useEffect(() => {
-    if (!user_id || !tour_id) return;
+    if (!user_id || !tour_id) {
+      console.error(`missing user_id: ${user_id} or tour_id: ${tour_id}`);
+      return;
+    }
     const unsub = onSnapshot(doc(db, "tours", tour_id), (snap) => {
       const data = snap.data() as Tour;
       setTourInfo({ ...data, tour_id });
