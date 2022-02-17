@@ -17,15 +17,25 @@ const Home: NextPage = () => {
     <Container>
       <Box
         sx={{
-          width: "60vw",
-          height: "60vw",
+          minWidth: "50vw",
+          minHeight: "50vh",
           position: "relative",
           mx: "auto",
           mt: "10vh",
         }}
       >
-        <NextImage src={"/images/tourmap_logo.png"} layout="fill" />
+        <NextImage src={"/images/toursync_logo.svg"} layout="fill" />
       </Box>
+      <Typography
+        sx={{
+          textAlign: "center",
+          mt: 2,
+          color: (t) => t.palette.primary.dark,
+        }}
+        variant="subtitle1"
+      >
+        group travel, simplified
+      </Typography>
     </Container>
   );
 };
