@@ -4,10 +4,12 @@ import type { Dispatch, SetStateAction, RefObject } from "react";
 import type { MapRef } from "react-map-gl";
 
 import { useInterpret } from "@xstate/react";
-import { mapMachine, MapMachineType } from "~/xstate/MapMachine";
+import {
+  mapMachine,
+  MapMachineType,
+} from "~/xstate/tourmap_machine/MapMachine";
 import type { ActorRefFrom } from "xstate";
 import { useTourCtx } from "./TourCtx";
-import { placeSearchService } from "~/xstate/mapmachine.placesSearchSvc";
 import { useMapCtx } from "~/utils/googleMap/MapWrap";
 
 interface MapboxCtxI {
@@ -83,6 +85,7 @@ export const MapboxCtxProvider: React.FC = ({ children }) => {
         selectedEvent,
         selectEvent,
         mapRef,
+        //@ts-ignore
         mapService,
       }}
     >

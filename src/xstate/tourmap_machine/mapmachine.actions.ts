@@ -1,4 +1,3 @@
-import { airports } from "~/data/airportsByLinks";
 import { assign, send } from "xstate";
 import type { AssignAction, SendAction } from "xstate";
 import type {
@@ -37,7 +36,7 @@ const loadEvents: MapMachineAssign = assign((ctx, evt) => {
 
 const toggleSelectedEvent: MapMachineAssign = assign((ctx, evt) => {
   invariant(evt.type === "TOGGLE_SELECTED_EVENT");
-  const { selectedEventId, events } = ctx;
+  const { events } = ctx;
   const { event_id, open } = evt.payload;
   if (open) {
     return {
@@ -60,6 +59,12 @@ const selectLeg: MapMachineAssign = assign((ctx, evt) => {
   return { ...ctx, selectedLegId: open ? leg_id : "" };
 });
 
+const selectAirport: MapMachineAssign = assign((ctx, evt) => {
+  invariant(evt.type === "SELECT_AIRPORT");
+  const { iata_code, selected } = evt.payload;
+  return { ...ctx, selectedAirportId: selected ? iata_code : "" };
+});
+
 const autoSelectLeg: MapMachineAssign = assign((ctx, evt) => {
   const { selectedEventId, legObj } = ctx;
   if (!selectedEventId) return { ...ctx, selectedLegId: "" };
@@ -71,17 +76,6 @@ const autoSelectLeg: MapMachineAssign = assign((ctx, evt) => {
   const selectedLegId = containingLeg ? containingLeg[0] : "";
   return { ...ctx, selectedLegId };
 });
-
-const unselectEvent: MapMachineAssign = assign((ctx) => ({
-  ...ctx,
-  selectedEvent: null,
-  selectedEventId: null,
-}));
-
-const unselectRouteIds: MapMachineAssign = assign((ctx) => ({
-  fromEventId: null,
-  toEventId: null,
-}));
 
 const selectRouteIds: MapMachineAssign = assign((ctx, evt) => {
   invariant(evt.type === "SELECT_TRAVEL");
@@ -142,9 +136,10 @@ const updateAirports: MapMachineAssign = assign((ctx, evt) => {
 const showHideMarkers: MapMachineAssign = assign((ctx, evt) => {
   invariant(evt.type === "SHOW_HIDE_MARKERS");
   const { type, show } = evt.payload;
+  const mapAirports = ctx.mapAirports || { airports: {}, show: true };
   switch (type) {
     case "airports":
-      return { ...ctx, mapAirports: { ...ctx.mapAirports, show } };
+      return { ...ctx, mapAirports: { ...mapAirports, show } };
     default:
       return ctx;
   }
@@ -191,21 +186,51 @@ const focusOnRoute: MapCtrlSend = send(
   { to: "mapControl" }
 );
 
+const focusAirportAndEvent: MapCtrlSend = send(
+  (ctx, evt) => {
+    const { selectedAirportId, mapAirports, selectedEvent } = ctx;
+    const selectedAP =
+      mapAirports?.airports && selectedAirportId
+        ? mapAirports.airports[selectedAirportId]
+        : null;
+    if (selectedEvent && selectedAP) {
+      const point1 = selectedAP;
+      const point2 = selectedEvent.loc;
+      return { type: "FOCUS_TWO_POINTS", payload: { point1, point2 } };
+    } else if (selectedEvent) {
+      return { type: "FOCUS_EVENT", payload: { selectedEvent } };
+    } else {
+      return { type: "NONE" };
+    }
+  },
+  { to: "mapControl" }
+);
+
+export const nullKeys = (keys: (keyof MapMachineCtx)[]): MapMachineAssign =>
+  assign((ctx: MapMachineCtx) => {
+    const newCtx = { ...ctx };
+    keys.forEach((key) => {
+      //@ts-ignore
+      newCtx[key] = null;
+    });
+    return newCtx;
+  });
+
 const actions = {
   loadMap,
   updateBounds,
   loadEvents,
   loadLegObj,
   toggleSelectedEvent,
-  unselectEvent,
   autoSelectLeg,
   selectLeg,
+  selectAirport,
+  focusAirportAndEvent,
   focusOnLeg,
   focusOnEvent,
   focusOnTour,
   focusOnRoute,
   selectRouteIds,
-  unselectRouteIds,
   addPoisToEvent,
   showHidePois,
   updateMapPOIs,

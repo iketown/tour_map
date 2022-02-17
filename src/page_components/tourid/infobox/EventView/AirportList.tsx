@@ -1,4 +1,12 @@
-import { Box, Chip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+} from "@mui/material";
 import { distance, point } from "@turf/turf";
 import { useSelector } from "@xstate/react";
 import { LngLat } from "react-map-gl";
@@ -8,13 +16,16 @@ import { useMapboxCtx } from "~/contexts/MapboxCtx";
 import { useFlightFxns } from "~/hooks/travel/useFlightFxns";
 import { useMapBounds } from "~/hooks/useMapBounds";
 import { rainbow } from "~/utils/mapBox/legColors";
+import SelectedAirport from "./SelectedAirport";
 
 const AirportList = () => {
   const { mapService } = useMapboxCtx();
   const { getAirportsWithinBounds } = useFlightFxns();
   const map = useSelector(mapService, ({ context }) => context.map);
-  const mapBounds = useSelector(mapService, ({ context }) => context.mapBounds);
-  const [selectedAirportId, setSelectedAirportId] = useState("");
+  const selectedAirportId = useSelector(
+    mapService,
+    ({ context }) => context.selectedAirportId
+  );
   const listRef = useRef<HTMLUListElement>(null);
   const { isOnMap } = useMapBounds();
   const selectedEvent = useSelector(
@@ -75,19 +86,10 @@ const AirportList = () => {
     },
     [selectedEvent]
   );
-  const handleClickAP = (iata: string) => {
-    setSelectedAirportId(iata);
-    const selectedAP = mapAirports?.airports[iata];
-    if (!selectedEvent || !selectedAP) {
-      console.log(`missing`, { selectedAP, selectedEvent });
-      return;
-    }
-    const point1 = selectedAP;
-    const point2 = selectedEvent.loc;
-
+  const handleClickAP = (iata_code: string, isSelected?: boolean) => {
     mapService.send({
-      type: "FOCUS_TWO_POINTS",
-      payload: { point1, point2 },
+      type: "SELECT_AIRPORT",
+      payload: { iata_code, selected: !isSelected },
     });
   };
   const selectedAP =
@@ -109,13 +111,12 @@ const AirportList = () => {
                   const isSelected = ap.iata_code === selectedAirportId;
                   const distanceInMiles = getDistanceFromEvent(ap);
                   return (
-                    <Box sx={{ mr: 1, textAlign: "center" }}>
+                    <Box key={ap.iata_code} sx={{ mr: 1, textAlign: "center" }}>
                       <Chip
                         variant={isSelected ? "filled" : "outlined"}
-                        key={ap.iata_code}
                         label={ap.name}
                         clickable
-                        onClick={() => handleClickAP(ap.iata_code)}
+                        onClick={() => handleClickAP(ap.iata_code, isSelected)}
                       />
                       <Typography
                         variant="caption"
@@ -129,11 +130,8 @@ const AirportList = () => {
                 })}
           </Box>
         </Box>
-        <Box>
-          <pre>{JSON.stringify(selectedAP, null, 2)}</pre>
-        </Box>
+        {selectedAP && <SelectedAirport />}
       </Box>
-      <DataView data={mapAirports} title="mapAirports" />
     </div>
   );
 };

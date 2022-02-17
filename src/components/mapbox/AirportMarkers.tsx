@@ -5,6 +5,7 @@ import { useMapboxCtx } from "~/contexts/MapboxCtx";
 import { MdLocalAirport } from "react-icons/md";
 import { Box, Tooltip } from "@mui/material";
 import { useMapBounds } from "~/hooks/useMapBounds";
+import { motion } from "framer-motion";
 
 const AirportMarkers = () => {
   const { mapService } = useMapboxCtx();
@@ -13,7 +14,18 @@ const AirportMarkers = () => {
     mapService,
     ({ context }) => context.mapAirports
   );
-  const map = useSelector(mapService, ({ context }) => context.map);
+  const selectedAirportId = useSelector(
+    mapService,
+    ({ context }) => context.selectedAirportId
+  );
+
+  const handleClickAirport = (iata_code: string, isSelected?: boolean) => {
+    mapService.send({
+      type: "SELECT_AIRPORT",
+      payload: { iata_code, selected: !isSelected },
+    });
+  };
+
   const { isOnMap } = useMapBounds();
   return (
     <>
@@ -23,6 +35,7 @@ const AirportMarkers = () => {
           .filter(isOnMap)
           .map((ap) => {
             const { lat, lng } = ap;
+            const isSelected = ap.iata_code === selectedAirportId;
             return (
               <Marker
                 key={ap.iata_code}
@@ -32,12 +45,26 @@ const AirportMarkers = () => {
               >
                 <Tooltip title={ap.name}>
                   <Box
-                    sx={{ width: 20, height: 20, cursor: "pointer" }}
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      cursor: "pointer",
+                      position: "relative",
+                    }}
                     onClick={() => {
-                      console.log("airport", ap);
+                      handleClickAirport(ap.iata_code, isSelected);
                     }}
                   >
-                    <MdLocalAirport style={{ height: 20, width: 20 }} />
+                    {isSelected && <MarkerCircle />}
+                    <MdLocalAirport
+                      style={{
+                        height: 20,
+                        width: 20,
+                        position: "absolute",
+                        top: 0,
+                        color: isSelected ? "blue" : "gray",
+                      }}
+                    />
                   </Box>
                 </Tooltip>
               </Marker>
@@ -48,3 +75,31 @@ const AirportMarkers = () => {
 };
 
 export default AirportMarkers;
+
+const MoBox = motion(Box);
+
+const MarkerCircle = () => {
+  return (
+    <MoBox
+      variants={{
+        small: {
+          scale: 1.2,
+        },
+        large: {
+          scale: 1.5,
+          transition: { repeat: Infinity, duration: 1, repeatType: "reverse" },
+        },
+      }}
+      style={{
+        height: 20,
+        width: 20,
+        position: "absolute",
+        border: "1px solid black",
+        borderRadius: "50%",
+        transform: "translate(-15px,-15px)",
+      }}
+      initial="small"
+      animate={"large"}
+    />
+  );
+};

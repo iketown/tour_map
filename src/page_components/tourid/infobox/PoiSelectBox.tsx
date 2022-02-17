@@ -1,14 +1,8 @@
+import { Autocomplete, Box, Chip, TextField } from "@mui/material";
 import * as React from "react";
-import {
-  Button,
-  Autocomplete,
-  TextField,
-  Box,
-  SvgIcon,
-  Chip,
-} from "@mui/material";
-import { poiTypes } from "~/xstate/poiTypes";
-import type { POItype } from "~/xstate/poiTypes";
+import type { POItype } from "~/xstate/tourmap_machine/poiTypes";
+import { poiTypes } from "~/xstate/tourmap_machine/poiTypes";
+// @ts-nocheck
 
 interface PoiSelectBoxI {
   onSelect: (poiNames: string[]) => void;
@@ -43,6 +37,7 @@ const PoiSelectBox: React.FC<PoiSelectBoxI> = ({ onSelect }) => {
           console.log("renderInput", params);
           const { InputProps, ...otherParams } = params;
           const { startAdornment, ...otherInputProps } = InputProps;
+          //@ts-ignore
           const newStartAdornment = startAdornment?.map(({ props, key }) => {
             const poiType = poiTypes.find(({ name }) => name === props.label);
             const Icon = poiType?.icon;

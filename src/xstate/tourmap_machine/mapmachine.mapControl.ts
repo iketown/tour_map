@@ -81,6 +81,7 @@ export const mapControl =
             if (lat && lng) {
               focusOnLoc({ lat, lng }, map);
             }
+            break;
           }
           if (fromEvent && toEvent) {
             const line = lineString(
@@ -92,15 +93,17 @@ export const mapControl =
             focusOnLine(line, map);
             break;
           }
+          break;
         }
         case "FOCUS_TWO_POINTS": {
-          invariant(e.type === "FOCUS_TWO_POINTS");
-          const { point1, point2 } = e.payload;
-          const line = lineString([
-            [point1.lng, point1.lat],
-            [point2.lng, point2.lat],
-          ]);
-          focusOnLine(line, map);
+          if (e.type === "FOCUS_TWO_POINTS") {
+            const { point1, point2 } = e.payload;
+            const line = lineString([
+              [point1.lng, point1.lat],
+              [point2.lng, point2.lat],
+            ]);
+            focusOnLine(line, map);
+          }
         }
         case "MAP_POIS": {
         }

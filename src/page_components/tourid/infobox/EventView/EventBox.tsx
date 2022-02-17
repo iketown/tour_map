@@ -2,28 +2,8 @@ import { useSelector } from "@xstate/react";
 import React, { useState } from "react";
 import { useMapboxCtx } from "~/contexts/MapboxCtx";
 import { useMapCtx } from "~/utils/googleMap/MapWrap";
-import DataView from "~/components/DataView";
-import SelectedEventView from "./SelectedEventTitle";
 import MapViewTabs from "./MapViewTabs";
-
-import {
-  Box,
-  Stack,
-  Typography,
-  Button,
-  TextField,
-  InputAdornment,
-  Avatar,
-  Icon,
-} from "@mui/material";
-import { poiTypes } from "~/xstate/poiTypes";
-import { Chip } from "@mui/material";
-
-import { Grid } from "@mui/material";
-
-import PoiSelectBox from "../PoiSelectBox";
-import invariant from "tiny-invariant";
-import GoogPlacesAc from "~/components/google/GoogPlacesAC";
+import SelectedEventView from "./SelectedEventTitle";
 
 const EventBox = () => {
   const { placesService } = useMapCtx();
@@ -66,50 +46,8 @@ const EventBox = () => {
   };
   return (
     <div>
-      {/* <Stack direction={"row"} justifyContent="space-between" spacing={2}>
-        <Typography variant="h5">
-          {city}, {state}
-        </Typography>
-        <Typography variant="overline" color="GrayText">
-          {venue}
-        </Typography>
-      </Stack> */}
       <SelectedEventView />
       <MapViewTabs />
-      {/* <Box sx={{ my: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            {" "}
-            <TextField
-              label="keyword search"
-              placeholder="Starbucks"
-              value={poiText}
-              onChange={(e) => {
-                setPoiText(e.target.value);
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button onClick={handleSearchBox}>go</Button>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Box>
-      <Box>
-        <GoogPlacesAc
-          label="search near loc"
-          handleSelectedPlace={(place) => {
-            console.log("place", place);
-          }}
-          location={loc}
-          radius={300}
-          types={["airport"]}
-        />
-      </Box> */}
-      {/* <DataView data={event} title="event" /> */}
     </div>
   );
 };

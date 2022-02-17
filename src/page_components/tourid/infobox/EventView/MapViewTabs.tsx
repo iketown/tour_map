@@ -25,9 +25,7 @@ const MapViewTabs = () => {
       </Tabs>
       {tabValue === "Pois" && <PoiList />}
       {tabValue === "Airports" && <AirportList />}
-      <pre style={{ fontSize: 10, color: "purple", margin: "1rem" }}>
-        {tabValue}
-      </pre>
+
       <DataView data={mapAirports} title="mapAirports" />
     </Box>
   );

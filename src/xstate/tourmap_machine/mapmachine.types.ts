@@ -26,6 +26,7 @@ export type MapMachineCtx = {
   selectedEventId: string | null;
   selectedEvent: EventBasic | null;
   selectedLegId: string | null;
+  selectedAirportId: string | null;
   fromEventId: string | null;
   toEventId: string | null;
   showPOIs: POIKey[];
@@ -34,8 +35,8 @@ export type MapMachineCtx = {
     airports: {
       [iata_code: string]: AirportPoi;
     };
-  };
-  placesService?: google.maps.places.PlacesService;
+  } | null;
+  // placesService?: google.maps.places.PlacesService;
   poiQueries: POIQueries;
 };
 
@@ -59,6 +60,10 @@ export type MapMachineAction =
   | {
       type: "SELECT_TRAVEL";
       payload: { fromEventId?: string; toEventId?: string };
+    }
+  | {
+      type: "SELECT_AIRPORT";
+      payload: { iata_code: string; selected?: boolean };
     }
   | {
       type: "ADD_POIS_TO_EVENT";
@@ -123,7 +128,8 @@ export type MapControlAction =
   | {
       type: "MAP_POIS";
       payload: { poiQueries: POIQueries; event_id: string };
-    };
+    }
+  | { type: "NONE" };
 
 // https://steveholgado.com/typescript-types-from-arrays/
 

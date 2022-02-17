@@ -39,7 +39,7 @@ const PoiList = () => {
             <Grid item>
               <Chip
                 icon={
-                  icon && (
+                  icon ? (
                     <Box
                       sx={{
                         border: "1px solid #DDD",
@@ -57,7 +57,7 @@ const PoiList = () => {
                         width={iconSize}
                       />
                     </Box>
-                  )
+                  ) : undefined
                 }
                 deleteIcon={show ? <CheckCircle /> : <CircleOutlined />}
                 onDelete={handleClick}

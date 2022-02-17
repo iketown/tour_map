@@ -1,16 +1,18 @@
 import { Box } from "@mui/material";
 import { lineString } from "@turf/turf";
 import { useSelector } from "@xstate/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Map, { Layer, Marker, Source } from "react-map-gl";
 import { useMapboxCtx } from "~/contexts/MapboxCtx";
 import { useTourCtx } from "~/contexts/TourCtx";
 import { useLegs } from "~/hooks/useLegs";
 import PoiMarkers from "./PoiMarkers";
+//@ts-ignore
 
 import { getMyArcRoute } from "./tourmap.helper";
 import AirportMarkers from "./AirportMarkers";
+import { useMapDirections } from "~/hooks/useMapDirections";
 
 function TourMap() {
   const [viewState, setViewState] = React.useState({
@@ -27,8 +29,8 @@ function TourMap() {
     },
   });
   const { mapService } = useMapboxCtx();
+
   const { legObj, orderedEvents } = useLegs();
-  const { tourInfo } = useTourCtx();
 
   const mapAirports = useSelector(
     mapService,
@@ -97,17 +99,26 @@ function TourMap() {
             if (!seg) return null;
             const { from, to } = seg;
             const lineSeg = lineString([from, to]);
-            if (i === 0) {
-              const myData = getMyArcRoute(from, to, 0.5);
-              return (
-                <Source key={`line_${i}`} type="geojson" data={myData}>
-                  <Layer type="line" id={`line${i}`} interactive />
-                </Source>
-              );
-            }
+            // if (i === 0) {
+            //   const myData = getMyArcRoute(from, to, 0.5);
+            //   return (
+            //     <Source key={`line_${i}`} type="geojson" data={myData}>
+            //       <Layer type="line" id={`line${i}`} interactive />
+            //     </Source>
+            //   );
+            // }
             return (
               <Source key={`line_${i}`} type="geojson" data={lineSeg}>
-                <Layer type="line" id={`line${i}`} interactive />
+                <Layer
+                  type="line"
+                  id={`line${i}`}
+                  interactive
+                  paint={{
+                    "line-dasharray": [2, 4],
+                    "line-color": "gray",
+                    "line-width": 1,
+                  }}
+                />
               </Source>
             );
           })}

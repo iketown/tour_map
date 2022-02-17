@@ -53,6 +53,7 @@ const TourIdPage: React.FC<TourIdPageI> = ({ tour_id }) => {
               <TourMap />
               <Divider sx={{ my: 1 }} />
               <MapInfoSwitch />
+              <Box mb={15} />
             </Grid>
           </Grid>
         </>

@@ -59,7 +59,7 @@ const TourLegEventList = () => {
   const lastDate = lastGig?.date;
 
   return (
-    <EventFormDialog event_id={selectedEventId}>
+    <EventFormDialog event_id={selectedEventId || undefined}>
       {({ openForm }) => {
         const handleEditEvent = (event_id: string) => {
           selectEvent(event_id);

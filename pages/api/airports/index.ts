@@ -27,7 +27,7 @@ type AirportListItem = {
 const convertListItemToRecord = (
   listItem: AirportListItem,
   distanceKm?: number
-): AirportRecord => {
+): AirportPoi => {
   const { _geoloc, ...airportInfo } = listItem;
   const { lat, lng } = _geoloc!;
   return {
@@ -40,7 +40,7 @@ const convertListItemToRecord = (
 };
 
 const getAirportsWithin = (center: number[], km: number) => {
-  const airportsInRange: { [id: string]: AirportRecord } = {};
+  const airportsInRange: { [id: string]: AirportPoi } = {};
   //@ts-ignore
   airports.forEach((ap: AirportListItem) => {
     const { _geoloc, ...airportInfo } = ap;
@@ -76,7 +76,7 @@ const getAirportsInBox = ({
       [ne.lng, ne.lat],
     ],
   ]);
-  const _airports: { [ap_id: string]: AirportRecord } = {};
+  const _airports: { [ap_id: string]: AirportPoi } = {};
   airports.forEach((ap: AirportListItem) => {
     const { _geoloc, ...airportInfo } = ap;
     const { lat, lng } = _geoloc!;
